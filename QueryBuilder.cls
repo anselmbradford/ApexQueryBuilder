@@ -70,10 +70,6 @@ public class QueryBuilder {
         sortDirection = dirDESC;
     }
 
-    public List<SObject> executeQuery() {
-        return new List<SObject>();
-    }
-
     public String getQuery() {
         if (queryType == typeSOQL) {
             return getQuerySOQL();
