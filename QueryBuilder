@@ -1,0 +1,68 @@
+/**
+* @author Anselm Bradford
+* @date 2016
+*
+* @description Provides an API to build SOQL queries.
+*/
+public class QueryBuilder {
+    private List<String> selectCommands;
+    private List<String> fromCommands;
+    private List<String> whereCommands;
+    private String sortByField;
+    private String sortDirection;
+    
+    public QueryBuilder() {
+        selectCommands = new List<String>();
+        fromCommands = new List<String>();
+        whereCommands = new List<String>();
+        
+        // Set default sort direction.
+        sortDirection = 'ASC';
+    }
+  
+    public void addSelectField(String field) {
+        selectCommands.add(field);
+    }
+
+    public void addSelectField(QueryBuilder subquery) {
+        selectCommands.add('(' + subquery.getQuery() + ')');
+    }
+    
+    public void addFromObject(String obj) {
+        fromCommands.add(obj);
+    }
+    
+    public void addWhereClause(String clause) {
+        whereCommands.add(clause);
+    }
+    
+    public void addSortByField(String field) {
+        sortByField = field;
+    }
+    
+    public void setSortASC(){
+        sortDirection = 'ASC';
+    }
+
+    public void setSortDESC(){
+        sortDirection = 'DESC';
+    }
+    
+    public List<SObject> executeQuery() {
+        // TODO: Implement to query database and return results.
+        return new List<SObject>();
+    }
+
+    public String getQuery() {
+        String query = 'SELECT ' + String.join(selectCommands, ', ');
+        query += ' FROM ' + String.join(fromCommands, ', ');
+        if (whereCommands.size() > 0) {
+	        query += ' WHERE ' + String.join(whereCommands, ' AND ');        
+        }
+        if (sortByField != null) {
+            query += ' SORT BY ' + sortByField + ' ' + sortDirection;
+        }
+        
+        return query;
+    }
+}
