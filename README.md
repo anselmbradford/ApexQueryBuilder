@@ -1,7 +1,7 @@
 # ApexQueryBuilder
-Salesforce apex class to build SOQL/SOSL queries.
+Provides an API wrapper around Salesforce SOQL/SOSL queries. Written in Apex.
 
-**Only supports basic query strings currently.**
+**Only supports basic query strings currently. Pull requests welcome.**
 
 ## Installation 
 
