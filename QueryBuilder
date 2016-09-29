@@ -5,28 +5,28 @@ public class QueryBuilder {
     private String sortByField;
     private String sortDirection;
     private String queryType;
-    
+
     private static final String dirASC = 'ASC';
     private static final String dirDESC = 'DESC';
     private static final String typeSOQL = 'SOQL';
     private static final String typeSOSL = 'SOSL';
-    
+
     public QueryBuilder() {
         reset();
     }
- 
+
     public void reset() {
         selectCommands = new List<String>();
         fromCommands = new List<String>();
         whereCommands = new List<Map<String, String>>();
-        
+
         // Set default sort direction.
         sortDirection = dirASC;
-        
+
         // Set default query type.
         queryType = typeSOQL;
     }
-    
+
     public void addSelectField(String field) {
         selectCommands.add(field);
     }
@@ -34,11 +34,11 @@ public class QueryBuilder {
     public void addSelectField(QueryBuilder subquery) {
         selectCommands.add('(' + subquery.getQuery() + ')');
     }
-    
+
     public void addFromObject(String obj) {
         fromCommands.add(obj);
     }
-    
+
     public void addWhereClause(String clause) {
         addWhereClause(clause, 'AND');
     }
@@ -48,7 +48,7 @@ public class QueryBuilder {
         whereClause.put(delimiter, clause);
         whereCommands.add(whereClause);
     }
-    
+
     public void addSortByField(String field) {
         sortByField = field;
     }
@@ -57,11 +57,11 @@ public class QueryBuilder {
         reset();
         queryType = typeSOSL;
     }
-    
+
     public void setSOQL() {
         reset();
     }
-    
+
     public void setSortASC() {
         sortDirection = dirASC;
     }
@@ -69,7 +69,7 @@ public class QueryBuilder {
     public void setSortDESC() {
         sortDirection = dirDESC;
     }
-    
+
     public List<SObject> executeQuery() {
         return new List<SObject>();
     }
@@ -80,7 +80,7 @@ public class QueryBuilder {
         }
         return getQuerySOSL();
     }
-    
+
     private String getQuerySOQL() {
         String whereClause = '';
         Boolean isFirst = true;
@@ -93,21 +93,21 @@ public class QueryBuilder {
                     if (isFirst == true) {
                         isFirst = false;
                     } else {
-                        whereClause += ' ' + whereCommand + ' ';                        
+                        whereClause += ' ' + whereCommand + ' ';
                     }
                     whereClause += whereCommandSet.get(whereCommand);
                 }
-                
+
             }
-	        query += ' WHERE ' + whereClause;
+            query += ' WHERE ' + whereClause;
         }
         if (sortByField != null) {
             query += ' SORT BY ' + sortByField + ' ' + sortDirection;
         }
-        
+
         return query;
     }
-    
+
     private String getQuerySOSL() {
         String whereClause = '';
         Boolean isFirst = true;
@@ -119,14 +119,14 @@ public class QueryBuilder {
                     if (isFirst == true) {
                         isFirst = false;
                     } else {
-                        whereClause += ' ' + whereCommand + ' ';                        
+                        whereClause += ' ' + whereCommand + ' ';
                     }
                     whereClause += whereCommandSet.get(whereCommand);
                 }
-                
+
             }
-	        query += whereClause + '} IN ALL FIELDS RETURNING ' + String.join(fromCommands, ', ') + ' (' + String.join(selectCommands, ', ') + ')';
+            query += whereClause + '} IN ALL FIELDS RETURNING ' + String.join(fromCommands, ', ') + ' (' + String.join(selectCommands, ', ') + ')';
         }
-        Return query; 
+        Return query;
     }
 }
